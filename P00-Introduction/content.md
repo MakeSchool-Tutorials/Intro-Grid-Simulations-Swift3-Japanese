@@ -1,9 +1,10 @@
 ---
-title: "Grid Simulations: Introduction"
+title: "グリッドシミュレーション: はじめに"
 slug: introduction
 ---
 
 Earlier you learned about one and two dimensional arrays, and in the process made Conway's Game of Life using Swift Playgrounds. In this tutorial, you'll bring the same code you wrote there, and bring it to Xcode as an iOS project. From there, you'll be able to run the Game of Life in the iOS Simulator, or your own iPhone! Next, you'll modify your existing Game of Life logic to create a new Grid Simulation of your very own, that emulates the spread of forest fires.
+これまでに１次元と２次元配列を学び、その中でコンウェイのライフゲームをSwiftプレイグラウンドを使って作りました。このチュートリアルでは、
 
 ## Prerequisites
 
