@@ -1,40 +1,48 @@
 ---
-title: "Your Custom Simulation: Forest Fires!"
+title: "Your Custom Simulation: Forest Fires!" "オリジナルのシミュレーション: 森の炎たち！"
 slug: forest-fire
 ---
 
 > [info]
 > You can open an emoji search popup on any OS X computer by holding `control + command` and press the `space bar`.
+> `control + command`を押しながら、`space bar`をクリックすると絵文字バーが開きます。
 
 Now that we've successfully replicated our Game of Life logic in a separate Xcode project, it's time to make our own custom Simulation, complete with new rules and emojis – one that simulates the spread of forest fires!
+ライフゲームのロジックを無事にXcodeプロジェクトに移すことができたので、いよいよオリジナルのカスタムシミュレーションー森の中の炎シミュレーションを作ってみましょう！
 
 > [action]
 > Open up [this page](http://ncase.me/simulating/) and read through "A Tiny Forest For Tiny Trees". We'll be implementing this simulation!
+> このページを開き、”A Tiny Forest For Tiny Trees”を読みましょう。これをアプリに実装します！
 
 Here is a summary of the rules that we're implementing:
-
-- **Setup:**
-  1. **Palette setup:** 🌲 and 🔥 should be in the palette.
-  1. **Random seeding:** Create a `8x10` grid randomly populated with a `50%` chance of a 🌲 tile, or empty otherwise.
-- **Update:**
-  1. **Spawning trees:** An empty tile has a `0.1%` chance of becoming a 🌲.
-  1. **Burning trees:** 🌲 turns into 🔥 if any of it's neighbors are 🔥.
-  1. **Sizzling out:** 🔥 dies out and becomes an empty tile.
+今から実装していくルールのまとめ:
+- **Setup(設定):**
+  1. **Palette setup（パレットの設定):** 🌲 and 🔥 should be in the palette.🌲 と 🔥 はパレットに入っている。
+  1. **Random seeding:** Create a `8x10` grid randomly populated with a `50%` chance of a 🌲 tile, or empty otherwise.`8x10`のグリッドを作り、`50%`の確率で🌲が現れ、そうでなければ空のままにする。
+- **Update（アップデート）:**
+  1. **Spawning trees（木の誕生):** An empty tile has a `0.1%` chance of becoming a 🌲.空のタイルは、次のターンで`0.1%`の確率で🌲になる。
+  1. **Burning trees:（焼ける木）** 🌲 turns into 🔥 if any of it's neighbors are 🔥.もし周りに🔥があれば、🌲は次のターンで🔥に変わる。
+  1. **Sizzling out (焼け切る木):** 🔥 dies out and becomes an empty tile.　🔥は次のターンで死に絶えて、空のタイルになる。
 
 We'll be conquering each of this rules one at a time.
+このルールを一つずつ攻略していきます。
 
-## ForestFireSimulation Class
+## ForestFireSimulation クラス
 
 Sounds like fun! To begin, let's make a new file for our new simulation.
+楽しそうですね！まずは、この新しいシミュレーションのための新しいファイルを作りましょう。
 
 > [action]
 > Click on the `Models` group in the left sidebar. With it selected, navigate to `File > New File`, or press `command+N`. Create a new Swift file (`iOS > Source > Swift File`) entitled `ForestFireSimulation.swift`, and put it inside the folder `Grid-Simulations-Xcode/Grid-Simulations`. Watch this video to see how to do it!
 > ![ms-video](assets/new-file.mp4)
+> `Models`グループをクリックして、`File > New File`をクリックするか、もしくは`command+N`を押しましょう。`iOS > Source > Swift File`と進んで新しいSwiftファイルを作ります。タイトルは`ForestFireSimulation.swift`で、`Grid-Simulations-Xcode/Grid-Simulations`フォルダの中にこのファイルを保存します。このビデオをみてみましょう！
 
 Great! Now let's make a new class for our `ForestFireSimulation`, inherited from `Simulation`.
+さて次は`ForestFireSimulation`という`Simulation`から継承された新しいクラスを作ります。
 
 > [action]
 > In `ForestFireSimulation.swift`, insert the following code:
+`ForestFireSimulation.swift`のファイルに、下のコードを入れてください。
 >
 ```swift
 public class ForestFireSimulation: Simulation {
@@ -48,39 +56,51 @@ public class ForestFireSimulation: Simulation {
 }
 ```
 
-# Scene Setup
+# Scene Setup　シーンのセットアップ
 
 In the Game of Life, we set the initial state through a text-based loader that automatically read the grid from a `.txt` file. In our new simulation we won't have a use for this since our start grid state will be randomly generated. We will be including our initialization code in the `setup()` function of our `ForestFireSimulation` class.
+このゲームライフでは、初めの状態を`.txt`ファイルに保存して、そのファイルを読み込ませることで表示させています。この新しいシミュレーションでは、この方法は使えません。なぜなら、今回のシミュレーションは最初の状態がランダムになっていて毎回違うものが表示されるからです。かわりに、`ForestFireSimulation`クラスの`setup()`関数の中に、初めの状態を定義します。
 
 First, let's remove the code that loads the grid state from file and replace it with our own logic:
+まず、ファイルからグリッドの状態を読み込むコードを削除し、代わりに自分たちのロジックを入れましょう。
 
 <!-- ACTION: UPDATE THESE INSTRUCTIONS AFTER ADDING SIMULATION CHOOSE SCREEN -->
 
 > [action]
 > Open `GameViewController.swift`. Remember, this is where the loading of our scene happens!
+> `GameViewController.swift`を開きます。ここのファイルがシーンの読み込みをしています。
 >
 > Comment out lines 24 through 26 and uncomment lines 36 & 37. This will load in your `ForestFireSimulation` class with the correct palette!
+> 24行目と26行目をコメントアウトして、36行目と37行目をアンコメントしましょう。こうすることで、`ForestFireSimulation`クラスのパレットを読み込みます。
 
-# (Pseudo) Random number generation
+# (Pseudo) Random number generation　（擬似）乱数を発生させよう
 
 Before we go back to the `setup()` function in `ForestFireSimulation.swift` let's talk about random numbers
+`setup()`関数に戻る前に、乱数について考えてみましょう
 
-Computers generally utilize an algorithm called [Pseudorandom Number Generator](https://en.wikipedia.org/wiki/Pseudorandom_number_generator) in order to generate sufficiently random numbers. Swift provides several ways to do this, and here is one:
+Computers generally utilize an algorithm called [Pseudorandom Number Generator](https://en.wikipedia.org/wiki/Pseudorandom_number_generator) in order to generate sufficiently random numbers.
+コンピュータは[擬似乱数](https://ja.wikipedia.org/wiki/%E6%93%AC%E4%BC%BC%E4%B9%B1%E6%95%B0)と呼ばれるアルゴリズムをよく用いています。
+Swift provides several ways to do this, and here is one:
+Swiftではいくつかのやり方でこのアルゴリズムを使うことができます。
+例:
 
 ```swift
 arc4random()
 ```
 
 This will return a `Int` between values 0 and `RAND_MAX` – a global constant you can use in your code. So what if you instead want a `Double`, between the range 0 and 1?
+このコードは0から`RAND_MAX`（自分のコードの中で使うことができる最大値、グローバル定数）までの`Int`を返します。では、もし0から1の間のランダムな`Double`が欲しかったらどうすればいいでしょうか？
 
 ```swift
 Double(arc4random()) / Double(UInt32.max)
 ```
 
 Since you'll be using this often, we've created a function called `randomZeroToOne()` that returns a `Double` between zero and one. You can use it anywhere in this app!
+これはよく使うので、`randomZeroToOne()`という関数を作っておきました。この関数は0から1までの`Double`型の値を返します。このアプリの中でいつでも使える便利な関数です！
 
 > [info]
 > You have to cast both values to `Double`, since Swift will not implicitly convert `Int`s to `Double`s through mathematical operations. This point differentiates Swift from other languages like Java.
+> Swiftでは、分母、分子の値の二つとも、`Double`型にキャスト(変換)する必要があります。Swiftは`Int`を`Double`に自動的に変換することができないのです。Javaのような他のプログラミング言語では、自動的に変換されるので少し異なります。
 
 <!-- ## Seeding your random numbers
 
@@ -99,15 +119,19 @@ So, you call the `srandom()` function once in your app, before you generate any 
 > In line 17 of `GameViewController` – right after the call to `super.viewDidLoad()` – add in the above code to "seed" the random number generator, using `srandom` and the current time. -->
 
 Let's move on and apply this logic to our `setup()` function.
+では`setup()`関数にこのロジックを応用してみましょう。
 
-# Randomly seeding the grid
+# Randomly seeding the grid　ランダムに木を生やそう
 
 Our guidelines mentioned that we were to create a 8x10 grid, randomly filled with a 50% chance of 🌲. So, let's start by creating a 2D array!
+初めにまとめたガイドラインには、8x10のグリッドに、50%の確率で🌲が埋まると書かれていました。それを２次元配列を使って作り始めましょう！
 
 From inside the `ForestFireSimulation` class, our grid variable can be accessed via `grid`. So, let's set `grid` to be a new 2D array:
+`ForestFireSimulation`クラスの中から、グリッドは`grid`と呼び出すことで使うことができます。`grid`を編集して新しい2次元配列を作りましょう。
 
 > [action]
 > Insert the following into the `setup()` function in `ForestFireSimulation.swift`:
+> `ForestFireSimulation.swift`の中の`setup()`の中に下記のコードを入れましょう。
 >
 ```swift
 grid = [[Character?]](repeating: [Character?](repeating: nil, count: 10), count: 10)
