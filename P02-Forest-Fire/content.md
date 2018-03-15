@@ -127,7 +127,7 @@ Our guidelines mentioned that we were to create a 8x10 grid, randomly filled wit
 初めにまとめたガイドラインには、8x10のグリッドに、50%の確率で🌲が埋まると書かれていました。それを２次元配列を使って作り始めましょう！
 
 From inside the `ForestFireSimulation` class, our grid variable can be accessed via `grid`. So, let's set `grid` to be a new 2D array:
-`ForestFireSimulation`クラスの中から、グリッドは`grid`と呼び出すことで使うことができます。`grid`を編集して新しい2次元配列を作りましょう。
+`ForestFireSimulation`クラスの中から、グリッドは`grid`と呼び出すことで使うことができます。さあ、`grid`を編集して新しい2次元配列を作りましょう。
 
 > [action]
 > Insert the following into the `setup()` function in `ForestFireSimulation.swift`:
@@ -138,16 +138,21 @@ grid = [[Character?]](repeating: [Character?](repeating: nil, count: 10), count:
 ```
 
 Now let's iterate through each tile in our 2D grid, and set a tile to 🌲 based on a 50% chance. But how do we do that?
+次は、2Dのグリッドの一つ一つのタイルを繰り返し、50%の確率で🌲を入れていく作業をしましょう。でもどうすればいいのでしょう？
 
 Remember how we said you have access to a `randomZeroToOne()` function that returned a value between 0 and 1? If we compare that number against `0.5`, we'll have a 50% chance of succeeding!
+`randomZeroToOne()`関数を覚えていますか？これは0から1の間の値をランダムに返してくれる関数でしたね。この関数で返って来る値と`0.5`を比べれば、50%の確率を表現できることになりますね！
 
 > [action]
 > Go ahead and write the code to populate the tiles with 🌲. Do you remember how to iterate through elements of an array? Iterate through them and on each, change the value to 🌲 if `randomZeroToOne()` returns a value less than `0.5`.
+> コードを書いてタイルを🌲で埋めましょう。配列の中身を繰り返し操作する方法を覚えていますか？
+繰り返し操作をする中で、もし`randomZeroToOne()`が`0.5`より小さい値の時、🌲をセットしましょう。
 
 <!--  -->
 
 > [solution]
 > Done? Your `setup()` function should look something like this:
+>書き終わりましたか？`setup()`関数はこのようになっているはずです:
 >
 ```swift
 grid = [[Character?]](repeating: [Character?](repeating: nil, count: 10), count: 10)
@@ -161,6 +166,7 @@ for x in 0..<8 {
 ```
 
 If you run your code, you should now see random 🌲 filling the tiles!
+ここでコードを実行したら、ランダムに生える🌲が見られるはずです！
 
 <!-- Great! Now we spawn our random 🔥 at a random tile location. Here, we learn about the modulo `%` operator:
 
@@ -191,16 +197,20 @@ grid[x][y] = "🔥"
 
 Run your code again. You should now see a single 🔥 placed at a random location! -->
 
-# Retrieving neighbors
+# Retrieving neighbors 周りのセルのデータを見てみよう
 
 Before we dive into the update loop, we should write some helper functions that will retrieve the neighbors of each position in the grid.
+Update関数に入る前に、まずいくつかのヘルパー関数を作りましょう。このヘルパー関数は各セルの周りのデータを取得します。
 
 ## isLegalPosition
 
 First, let's make a helper function, that determines if a grid position is in bounds of the grid, and returns a `Bool`. Let's call this function `isLegalPosition(x: Int, y: Int)`.
+まず一つ目のヘルパー関数は、確認しようとしているセルがグリッドの中に収まっているかを確認して、`Bool`型のデータを返します。（つまり、もしグリッドの中に収まっていたら`true`を、そうでなければ`false`を返します)
+この関数の名前を`isLegalPosition(x: Int, y:Int)`と名付けましょう。
 
 > [action]
 > Create a new function, right below the empty `update()` function block. It should look like this:
+>まだ空の`update()`関数の下に、新しい関数を作りましょう。
 >
 ```swift
 func isLegalPosition(x: Int, y: Int) -> Bool {
@@ -208,11 +218,12 @@ func isLegalPosition(x: Int, y: Int) -> Bool {
 }
 ```
 > Now, insert code that returns true if the given x and y coordinates are inside the `grid` bounds, and false otherwise.
-
+> そして、引数になっているxとyが`grid`の中に収まっているかを確認して、収まっていたらtrue, そうでなければfalseを返すコードを書きましょう。
 <!--  -->
 
 > [solution]
 > Your `isLegalPosition` function should look like this:
+`isLegalPosition`関数はこのようになっているはずです:
 >
 ```swift
 func isLegalPosition(x: Int, y: Int) -> Bool {
@@ -224,21 +235,26 @@ func isLegalPosition(x: Int, y: Int) -> Bool {
 }
 ```
 
-## getNeighborPositions
+## getNeighborPositions - 周りの位置の番号を取得しよう
 
 Next, we'll write a function to return the positions of a cell's neighbors -- `getNeighborPositions(x originX: Int, y originY: Int) -> [(x: Int, y: Int)]`. It should return an `Array` of `(Int, Int)` tuples representing the `(x, y)` location of each neighbor within the bounds of the grid.
+次に、セルの周りの位置番号を取得する関数を書きます。名前は`getNeighborPositions(x originX: Int, y originY: Int) -> [(x: Int, y: Int)]`。この関数は`(Int, Int)`というタプル型の`配列`を返します。つまり、セルの周りの位置番号のリストです。
 
-### Wait, wait, wait. What is a `tuple`?
+### Wait, wait, wait. What is a `tuple`?　タプル型って？
 
 What's this return type, you ask? The parentheses syntax represents Swift's _tuple_ type, which you can read about [here](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-ID329). Basically, it's a way for you to quickly house multiple variables of potentially different types in one container. It's pretty much a lightweight class! So in this example, our function returns an _array_ of _tuples_ – containing two `Int`s, for the `x` and `y` indices.
+`()`を使って表すデータのことをタプル型と言って、[ここ](https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/TheBasics.html#//apple_ref/doc/uid/TP40014097-CH5-ID329)から詳細を見ることができます（英語）。タプルは、異なるデータ型の値をひとまとめにできる簡単な方法です。今回、この関数は _タプル_　（`x`と`y`の値が入ったデータ）の配列を返します。
 
 Tuples can be instantiated like this:
+タプルの書き方の例:
 
 ```swift
 let tuple = (2, 3)
 ```
 
 ...and if the tuple is a _named_ tuple, as is the case in our return statement, you can access the individual elements like this:
+タプルはそれぞれの値に名前をつけることができて、その名前を使って後からデータを呼び出すことができます。
+例:
 
 ```swift
 let namedTuple = (x: 2, y: 3)
@@ -248,6 +264,7 @@ let y = namedTuple.y
 
 > [action]
 > Create a new function, right below the `isLegalPosition` function. It should look like this:
+> `isLegalPosition`関数の下に新しい関数を作りましょう。下のようになるはずです:
 >
 ```swift
 func getNeighborPositions(x originX: Int, y originY: Int) -> [(x: Int, y: Int)] {
@@ -255,10 +272,13 @@ func getNeighborPositions(x originX: Int, y originY: Int) -> [(x: Int, y: Int)] 
 }
 ```
 > Now, insert code that returns an `Array` of `(Int, Int)` tuples representing the `(x, y)` location of each neighbor within the bounds of the grid.
+>さて、この関数の中にセルの周りの`(x, y)`の値の配列を返すようなコードを書きましょう。
 >
 > How do you know if a grid position is legal? Call the function you just wrote – `isLegalPosition()`! Remember, you can use the `for x in a...b` syntax to traverse from values `a` and `b` (inclusively). You can append to a `(Int, Int)` tuple to an `Array` by calling `myArray.append((xValue, yValue))`.
+> 計算をしたセルの周りの番号がグリッドの外にはみ出していないかどうか、どうやって確かめますか？ `isLegalPosition()`関数はそのための関数ですね！ `for x in a...b`を使うと、`a`から`b`までの値を全て繰り返し使うことができるのを覚えていますか？　配列に新しい`(Int, Int)`タプルの値を付け加えたい時は、`myArray.append((xValue, yValue))`と書きます。
 >
 > Before you get started, ask yourself: what ranges do you need to loop over? How will you make sure not to add `(originX, originY)` to the returned `Array`?
+> 始める前に、あるセルの周りのセルの位置番号を取得するということは、どこからどこまでの番号を確認する必要があるのか考えて見ましょう。　`(originX, originY)`（自分自身）を間違えて入れないためにはどんなコードを書けばいいか少し注意して見ましょう。
 
 <!--  -->
 
@@ -281,29 +301,36 @@ func getNeighborPositions(x originX: Int, y originY: Int) -> [(x: Int, y: Int)] 
 }
 ```
 
-# Spawning trees
+# Spawning trees　木を増やす
 
 Great! Now that we have a few helper functions, we can get started with growing our forest by spawning new trees. If you take a look at the rules again, then you'll notice that an empty tile has a `0.1%` chance of becoming a 🌲.
+いくつかヘルパー関数を書きましたね。これで、新しい木を生やすコードに取り掛かることができます。ルールを思い出しましょう。空のセルは次のターンで`0.1%`の確率で🌲になります。
 
 Since these rules (like Conway's Game of Life) will require a temporary grid to hold the new state of the simulation. Let's get started by adding an instance variable to hold this temporary grid!
+さて、このルールを実際にコードで表現するためには、”仮の”グリッドを作ることが必要です。`grid`をいきなり書き換えてしまうと、前のターンのデータと次のターンのデータが混ざってしまうので、別々にする必要があるのです。
 
 > [action]
 > Create a `newGrid: [[Character?]]` instance variable in the `ForestFireSimulation` class.
->
+>`ForestFireSimulation`クラスの中に、`newGrid: [[Character?]]`インスタンスを作りましょう。
 > Add this line above and outside of your `setup()` function:
+> `setup()`上（関数の外側）に、下のコードを入れましょう。
 >
 ```
 var newGrid: [[Character?]] = []
 ```
 >
 Now, at the start of your `update()` method, set the `newGrid` equal to `grid`. Then create loops to iterate over each element in `grid` (see Game of Life if you need a hint). At the end of the function (after the loops), set `grid` equal to `newGrid` so that the state will update!
+> まず`update()`関数の始めに、`newGrid`の値を`grid`にセットします。それから、`grid`の中の一つ一つの値を使いながら、`newGrid`の値を書き換えていきます。最後に、`grid`の値を`newGrid`の値にセットすれば完了です！
 >
 Inside of those loops, you should check if a tile is empty (remember, empty tiles are equal to `nil`). If it is empty, grab a value from `randomZeroToOne()` and spawn a tree with a `0.1%` chance.
+> ループ処理の中で、セルが空（`nil`）かどうか確認して、もし空だったら、`0.1%`の確率で木が植えられるようにコードを書きます。（確率には`randomZeroToOne()`を使うのでしたね。）
 
 Remember, `1%` translates to a value of `0.01`! Make sure you are spawning trees at the correct rate. It's also extremely important to remember that you should be reading values from `grid` and setting values to `newGrid`!
+`1%`は`0.01`と表現します。正しい確率で木が生えているか注意しましょう。`grid`と`newGrid`の使い分けには注意しましょう！
 
 >[solution]
 > Your `update` function should currently look like this:
+> `update`関数はこの時点でこのようになっているはずです:
 >
 ```
 public override func update() {
@@ -327,22 +354,28 @@ public override func update() {
 ![Growing trees](./bruceSprucesteen.png)
 
 Run your code and tap the Play button! Spend some time watching the trees grow... It might take a little while before you see one popup (`0.1%` is small) but it's still pretty peaceful.
+コードを実行してプレイボタンを押して見ましょう！少し時間を書けて、木が増えていく様子を見てみましょう。少し変化を感じるまで時間がかかりますが（`0.1%`がとても小さい値だからです）、すごく自然なシミュレーションですね。
 
-# Burning trees and spreading fire
+# Burning trees and spreading fire　木が燃え、炎が広がるシミュレーション
 
 Now that we've just centered ourself with the zen of create, it's time to write the code for fire propagation. The rule for 🔥 is a 🌲 turns into 🔥 if any of it's neighbors are 🔥. We already have all the loops and helper functions that we'll need so let's jump right in!
+さて、次は火が燃え広がるシミュレーションをコードで表してみましょう。🌲の周りに🔥があれば、次のターンで🌲が🔥になるというルールでしたね。さて早速挑戦して見ましょう。
 
 > [action]
 > Can you modify the code for this new rule without any hints? Get started now if you think you can!
+> このルールをコードで書くにはどうしたら良いでしょうか？
 >
 > If you need a hint... Add another check inside the loops to see if the current tile is a 🌲. If it is, call `getNeighborPositions`. Iterate over those values in `grid` and check for 🔥 tiles. If you find one, set the 🌲 tile in `newGrid` to 🔥!
+> （ヒント）ループの中で、確認しているセルが🌲かどうかをチェックします。もしそうだったら、`getNeighborPositions`を使って木の周りの位置データを取って、その位置データを使って🔥がないかどうか確認します。もし一つでも🔥があれば、🌲のセルを🔥に変えます。
 >
 > Remember, you can access the `x` and `y` values of a tuple returned by `getNeighborPositions` with `.x` and `.y` on any of the elements in the `Array`.
+> `.x` と `.y`　を使うことで、`getNeighborPositions`で返ってきた値の`x` と `y`のデータを取得することができます。
 
 <!--  -->
 
 > [solution]
 > Your `update` function should currently look like this:
+> `update`関数は下のようになっているはずです:
 >
 ```
 public override func update() {
@@ -374,23 +407,29 @@ public override func update() {
 ![It was always burning since the world's been turning](./weDidntStartTheFire.png "It was always burning, since the world's been turning")
 
 Ready for some destruction to balance out the creation from the last step? Run your code and tap the Play button. When you're ready to go, select 🔥 from the palette and tap a tile, and sit back while the forest gets engulfed in fire. Pretty scary, huh?
+コードを実行してプレイボタンを押しましょう。パレットから🔥を選んで、セルをタップして🔥を追加しましょう。木に炎が燃え移るシミュレーションが見られるはずです。
 
 > [action]
 > Pay close attention to how your fire spreads. If it is not spreading to every neighboring 🌲 (diagonals included) then you should go back and debug your `getNeighborPositions` helper function!
+> 炎の広がり方を観察して見ましょう。もしおかしなところがあれば、戻ってコードを確認して見ましょう。
 
-# Sizzling out
+# Sizzling out 炎の静まり
 
 The fire is currently taking over the forest and never dies out! We need to implement the last rule of 🔥 dies out and becomes an empty tile. This one is pretty straightforward -- no random chance or neighbors involved!
+今の状態では、🔥は全く静まりません。🔥についての最後のルールを付け加える必要があります。
 
 > [action]
 > Implement the last rule in your simulation so the fire dies out each generation.
+> 🔥についての最後のルールを付け加えましょう。
 >
 > Add a third check on the tiles as you loop over `grid`. If it is a 🔥, update that tile in `newGrid` to be nil.
+> これまで書いた条件のコードの下に、新たな条件を付け加えます。`grid`の中身を繰り返し確認して、もしセルに🔥があれば、`newGrid`のそのセルをnilに書き換えます。
 
 <!--  -->
 
 > [solution]
 > Your `update` function should currently look like this:
+> `update`関数は下のようになっているはずです:
 >
 ```
 public override func update() {
@@ -422,12 +461,15 @@ public override func update() {
 ```
 
 Run your code and tap the Play button. When you're ready to go, select 🔥 from the palette and tap a tile, and sit back while the forest gets engulfed in fire. This time, the 🔥 should roll through the forest and die out after a generation.
+コードを実行してプレイボタンを押しましょう。また同じように、🔥をいくつかセルに追加して、火が燃え移り、🔥が消えていく様子を確認しましょう。
 
 ![Burning down the forest](./burningTrees.gif)
 
-# Checking your results
+# Checking your results　最終チェック
 
 > [action]
 > Open up [this page](http://ncase.me/simulating/) again and compare your simulation to "A Tiny Forest For Tiny Trees". Do your results match theirs?
+> [このページ](http://ncase.me/simulating/)をまた開いて、このページにある"A Tiny Forest For Tiny Trees"シミュレーションと自分のシミュレーションを比べて見ましょう。同じように動いていますか？
 
 Congrats! You've made yourself a working simulation of a forest fire in action. On the next page, we'll continue to add more and more realism to the simulation!
+おめでとうございます！これで森と炎のシミュレーションができました。次のページでは、もっとリアルなシミュレーションに近づけていきます。
