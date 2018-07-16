@@ -46,7 +46,6 @@ func aTinyForest() {
 > [action]
 > `thunderboltAndLightning()`関数に上のルールを表現するコードを書いて見ましょう。
 
-Run your simulation for a while and watch as the forest burns down and grows back over time. Modify the growth rate of trees. How does that affect things?
 シミュレーションを実行して観察しましょう。確率の値を書き換えてどうシミュレーションが変わっていくかを確認しましょう。
 
 # 木を間引きする
@@ -105,7 +104,7 @@ func jerkTrees() {
 
 - **Setup(セットアップ):**
   1. **Palette setup(パレット):** 🌳, 🌱, 🔥, ✄ をパレットに加えます。
-  1. **Random seeding(木が生える):** `8x10`のグリッドを作り、`5%`の確率で強い木🌳が、`5%`の確率で弱い木🌱が生えます。
+  1. **Random seeding(木が生える):** `8x10`のグリッドを作り、`5%`の確率で強い木🌳が、`5%`の確率で悪い木🌱が生えます。
 - **Update(アップデート):**
   1. **Spawning trees(木が広がる):** 空のセルは`0.5%`の確率で🌳になり、`1%`の確率で🌱になる。
   1. **Killing strong trees(強い木が死んでいく):** 🌳は🔥には強いが、🌱に栄養を奪われる。🌳は、周りに✄があるか、４つ以上の🌱に囲まれると死んで空のセルになる。
@@ -117,6 +116,6 @@ func jerkTrees() {
 
 シミュレーションを実行して、しばらく観察してみましょう。🌳か🌱のどちらかが侵略してしまいますか？それとも上手く共存しますか？
 
-# Wrapping up with trees　森と炎のシミュレーション: 終わりに
+# 森と炎のシミュレーション: 終わりに
 
 [このページ](http://ncase.me/simulating/)を最後までみてみましょう。"Peeps Gettin' Sick"、"Rodent Racism"、"Cat/Dog Civil Conflict"シミュレーションを触ってみましょう。次のページではいよいよオリジナルのシミュレーションを作りますよ！
