@@ -11,5 +11,4 @@ slug: introduction
 
 もし自分のiPhoneで動かしたい場合は、iOSデベロッパーアカウントを作成しておく必要があります。
 
-Go download the project, unzip the folder and open the enclosed file named `Grid-Simulations.xcodeproj`. You're ready to begin!
 最後に、[ここ](https://github.com/MakeSchool-Tutorials/Intro-Grid-Simulations-Swift-Starter/archive/swift4.zip)からXcodeのスタータープロジェクトをダウンロードしましょう。ダウンロードしたらファイルを解凍してください。これで準備が完了です！

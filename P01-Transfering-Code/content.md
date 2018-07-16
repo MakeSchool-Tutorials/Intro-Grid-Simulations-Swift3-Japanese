@@ -70,7 +70,7 @@ func countNeighbors(grid: [[Character?]], column x: Int, row y: Int) -> Int {
 
 # ライフゲームのロジックを移す
 
-まずはじめに、`countNeighbors`と`getAlive`のロジックを移しましょう。(周りの生きているいるセルを数える関数のことでしたね。)
+まずはじめに、`countNeighbors`と`getAlive`のロジックを移しましょう。(周りの生きているセルを数える関数のことでしたね。)
 
 > [アクション]
 > Swiftプレイグラウンドの6ページを開きましょう。`getAlive`関数をコピーしてXcodeの`getAlive`関数に移し、`return 1`を削除します。`countNeighbors`関数に関しても同じことを繰り返します。

@@ -12,6 +12,7 @@ slug: forest-fire
 > [このページ](http://ncase.me/simulating/) を開き、”A Tiny Forest For Tiny Trees”を読みましょう。これをアプリに実装します！
 
 今から実装していくルールのまとめ:
+
 - **Setup(設定):**
   1. **Palette setup（パレットの設定):** 🌲 と 🔥 はパレットに入っている。
   1. **Random seeding (ランダムに生える木):** `8x10`のグリッドを作り、`50%`の確率で🌲が現れ、そうでなければ空のままにする。
