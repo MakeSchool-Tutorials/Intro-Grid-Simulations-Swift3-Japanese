@@ -9,7 +9,7 @@ slug: forest-fire
 ライフゲームのロジックを無事にXcodeプロジェクトに移すことができたので、いよいよオリジナルのカスタムシミュレーション - 森の中の炎シミュレーションを作ってみましょう！
 
 > [アクション]
-> [このページ](http://ncase.me/simulating/) を開き、”A Tiny Forest For Tiny Trees”を読みましょう。これをアプリに実装します！
+> [このページ](https://mikinomura.github.io/simulating-japanese/model/?local=forest/0_growth&play=0&edit=1) を開き、シミュレーションのルールを読みましょう。これをアプリに実装します！
 
 今から実装していくルールのまとめ:
 
@@ -405,6 +405,6 @@ public override func update() {
 # 最終チェック
 
 > [アクション]
-> [このページ](http://ncase.me/simulating/)をまた開いて、"A Tiny Forest For Tiny Trees"シミュレーションと自分のシミュレーションを比べて見ましょう。同じように動いていますか？
+> [このページ](https://mikinomura.github.io/simulating-japanese/model/?local=forest/0_growth&play=0&edit=1)をまた開いて、シミュレーションと自分のシミュレーションを比べて見ましょう。同じように動いていますか？
 
 おめでとうございます！これで森と炎のシミュレーションができました。次のページでは、もっとリアルなシミュレーションに近づけていきます。

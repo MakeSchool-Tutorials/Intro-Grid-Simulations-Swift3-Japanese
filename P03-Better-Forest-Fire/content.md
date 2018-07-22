@@ -6,13 +6,13 @@ slug: better-forest-fire
 > [info]
 > `control + command`を押しながら、`space bar`をクリックすると絵文字バーが開きます。
 
-ここまでで、基本のシミュレーションを作りました。次は[このページ](http://ncase.me/simulating/)の通り、🌲のシミュレーションを実装しましょう。
+ここまでで、基本のシミュレーションを作りました。次は[このページ](https://mikinomura.github.io/simulating-japanese/model/?local=forest/1_fire&play=1&edit=1)の通り、🌲のシミュレーションを実装しましょう。
 
 このページでは前のページのように細かく手順は書いていません。自分の力でどんなコードを書けばいいかを考えて試してみましょう。隣の仲間と一緒に考えながら進めてみましょう。
 
 # 雷の登場
 
-[このページ](http://ncase.me/simulating/) の"A Forest With Thunderbolt & Lightning, Very Very Frightening"セクションを読みましょう。前のページで作ったシミュレーションは、ユーザー（あなた）が炎を追加していました。今回は、雷を登場させて炎が発生するようにしましょう。
+[このページ](https://mikinomura.github.io/simulating-japanese/model/?local=forest/1_fire&play=1&edit=1) の"シミュレーションを試しましょう。前のページで作ったシミュレーションは、ユーザー（あなた）が炎を追加していました。今回は、雷を登場させて炎が発生するようにしましょう。
 
 > [action]
 > `ForestFireSimulation`の中に下にある二つの関数を加えましょう:
@@ -50,7 +50,7 @@ func aTinyForest() {
 
 # 木を間引きする
 
-[このページ](http://ncase.me/simulating/)の"A Forest Where You Show Trees No Mercy"を読みながら遊んでみましょう。木を上手く間引きすると、炎が燃え移るのを防ぐことができるのです！
+[このページ](https://mikinomura.github.io/simulating-japanese/model/?local=forest/2_firebreak&edit=1&paused=1)を読みながら遊んでみましょう。木を上手く間引きすると、炎が燃え移るのを防ぐことができるのです！
 
 > [action]
 > `ForestFireSimulation`に新しい関数を加えます:
@@ -83,7 +83,7 @@ func noMercy() {
 
 # 悪い木と炎
 
-[このページ](http://ncase.me/simulating/)の"A Forest Where Some Trees Are, Like, Total Jerks"を見てみましょう。今回は、色々な種類の木がある時にどのように炎が広がるかを考えてみます。
+[このページ](https://mikinomura.github.io/simulating-japanese/model/?local=forest/3_plants&edit=1)を見てみましょう。今回は、色々な種類の木がある時にどのように炎が広がるかを考えてみます。
 
 > [action]
 > `ForestFireSimulation`の中に下の関数を新しく作りましょう:
@@ -117,5 +117,5 @@ func jerkTrees() {
 シミュレーションを実行して、しばらく観察してみましょう。🌳か🌱のどちらかが侵略してしまいますか？それとも上手く共存しますか？
 
 # 森と炎のシミュレーション: 終わりに
-
-[このページ](http://ncase.me/simulating/)を最後までみてみましょう。"Peeps Gettin' Sick"、"Rodent Racism"、"Cat/Dog Civil Conflict"シミュレーションを触ってみましょう。次のページではいよいよオリジナルのシミュレーションを作りますよ！
+["Peeps Gettin' Sick（感染が広がる）"](https://mikinomura.github.io/simulating-japanese/model/?local=zoo/sick&edit=1), ["Rodent Racism（げっ歯動物の人種差別）"](https://mikinomura.github.io/simulating-japanese/model/?local=zoo/schelling&edit=1&paused=1), ["Cat/Dog Civil Conflict（猫と犬の内戦）"](https://mikinomura.github.io/simulating-japanese/model/?local=zoo/civil_war&edit=1)
+をみてみましょう。シミュレーションを触ってみましょう。次のページではいよいよオリジナルのシミュレーションを作りますよ！
